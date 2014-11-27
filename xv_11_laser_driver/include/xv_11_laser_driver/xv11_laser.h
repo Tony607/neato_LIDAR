@@ -70,9 +70,9 @@ namespace xv_11_laser_driver {
         private:
             /**
               * @brief checksum of the package.
-              * @param onepackage is the std::array representing the 22 bytes package
+              * @param onepackage is the boost::array representing the 22 bytes package
               */
-            template<std::size_t SIZE> void checksum(std::array<uint8_t, SIZE>& onepackage);
+            template<std::size_t SIZE> void checksum(boost::array<uint8_t, SIZE>& onepackage);
 			/**update function, takes the angle (an int, from 0 to 359) and the four bytes of data*/
 			void XV11Laser::update_view(sensor_msgs::LaserScan::Ptr scan,uint16_t angle,uint8_t x,uint8_t x1,uint8_t x2,uint8_t x3);
 			
