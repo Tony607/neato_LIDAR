@@ -91,8 +91,10 @@ namespace xv_11_laser_driver {
 				// start byte
 				boost::asio::read(serial_, boost::asio::buffer(raw_bytes,1));
 				uint8_t b = raw_bytes[0];
+				ROS_DEBUG("L0 got new byte = %d",b);
 				if (b == 0xFA){
 					init_level = 1;
+					ROS_DEBUG("got start byte");
 				}
 				else{
 					init_level = 0;
@@ -102,6 +104,7 @@ namespace xv_11_laser_driver {
 				// position index 
 				boost::asio::read(serial_, boost::asio::buffer(raw_bytes,1));
 				uint8_t b = raw_bytes[0];
+				ROS_DEBUG("L1 got new byte = %d",b);
 				if (b >= 0xA0 and b <= 0xF9){ 
 					index = b - 0xA0;
 					init_level = 2;
