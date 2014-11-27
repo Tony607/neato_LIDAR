@@ -67,6 +67,8 @@ namespace xv_11_laser_driver {
 	void XV11Laser::update_view(sensor_msgs::LaserScan::Ptr scan,uint16_t angle,uint8_t x,uint8_t x1,uint8_t x2,uint8_t x3){
 		uint16_t dist_mm = x | (( x1 & 0x1f) << 8); // data on 13 bits ? 14 bits ?
 		uint16_t quality = x2 | (x3 << 8); // data on 10 bits or more ?
+							
+		ROS_DEBUG("angle=%d, dist=%d, quality=%d",angle, dist_mm, quality);
 		scan->ranges[angle] = dist_mm / 1000.0;
 		scan->intensities[angle] = quality;
 	}     
