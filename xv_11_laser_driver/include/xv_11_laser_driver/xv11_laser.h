@@ -54,13 +54,6 @@ namespace xv_11_laser_driver {
               */
             ~XV11Laser() {};
 
-            /**
-              * @brief checksum of the package.
-              * @param onepackage is the std::array representing the 22 bytes package
-              */
-            template<std::size_t SIZE> void checksum(std::array<uint8_t, SIZE>& onepackage);
-			/**update function, takes the angle (an int, from 0 to 359) and the four bytes of data*/
-			void XV11Laser::update_view(sensor_msgs::LaserScan::Ptr scan,uint16_t angle,uint8_t x,uint8_t x1,uint8_t x2,uint8_t x3){
 			/**
               * @brief Poll the laser to get a new scan. Blocks until a complete new scan is received or close is called.
               * @param scan LaserScan message pointer to fill in with the scan. The caller is responsible for filling in the ROS timestamp and frame_id
@@ -74,6 +67,14 @@ namespace xv_11_laser_driver {
             void close() { shutting_down_ = true; };
 
         private:
+            /**
+              * @brief checksum of the package.
+              * @param onepackage is the std::array representing the 22 bytes package
+              */
+            template<std::size_t SIZE> void checksum(std::array<uint8_t, SIZE>& onepackage);
+			/**update function, takes the angle (an int, from 0 to 359) and the four bytes of data*/
+			void XV11Laser::update_view(sensor_msgs::LaserScan::Ptr scan,uint16_t angle,uint8_t x,uint8_t x1,uint8_t x2,uint8_t x3);
+			
             std::string port_; ///< @brief The serial port the driver is attached to
             uint32_t baud_rate_; ///< @brief The baud rate for the serial connection
             uint32_t firmware_; ///< @brief The firmware version to check.  Currently supports two different versions: 1 and 2.
