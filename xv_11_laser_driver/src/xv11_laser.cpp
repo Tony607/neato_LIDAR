@@ -88,6 +88,7 @@ namespace xv_11_laser_driver {
 		uint16_t nb_errors = 0;
 		boost::array<uint8_t, 4> raw_bytes;
 		uint32_t motor_speed = 0;
+		rpms=0;
 		
 		scan->angle_min = 0.0;
 		scan->angle_max = 2.0*M_PI;
@@ -171,14 +172,14 @@ namespace xv_11_laser_driver {
 				// verify that the received checksum is equal to the one computed from the data
 				if (XV11Laser::checksum(all_data) == incoming_checksum){
 					nb_good +=1;
-					motor_speed = (float)( b_speed[0] | (b_speed[1] << 8) ) / 64.0;
-					
+					motor_speed += (float)( b_speed[0] | (b_speed[1] << 8) );
+					rpms=float)( b_speed[0] | (b_speed[1] << 8) ) / 64.0;
 					update_view(scan, index * 4 + 0, b_data0[0], b_data0[1], b_data0[2], b_data0[3]);
 					update_view(scan, index * 4 + 1, b_data1[0], b_data1[1], b_data1[2], b_data1[3]);
 					update_view(scan, index * 4 + 2, b_data2[0], b_data2[1], b_data2[2], b_data2[3]);
 					update_view(scan, index * 4 + 3, b_data3[0], b_data3[1], b_data3[2], b_data3[3]);
 					
-					scan->time_increment = motor_speed/good_sets/1e8;
+					scan->time_increment = motor_speed/nb_good/1e8;
 				}
 				else{
 					// the checksum does not match, something went wrong...
