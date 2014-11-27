@@ -41,7 +41,7 @@ namespace xv_11_laser_driver {
 	}
 	/**checksum of the package*/
 	template<std::size_t SIZE>
-	uint16_t XV11Laser::checksum(boost::array<uint8_t, SIZE>& onepackage){
+	uint16_t checksum(boost::array<uint8_t, SIZE>& onepackage){
 		uint8_t i;
 		uint16_t data[10];
 		uint16_t checksum;
@@ -64,7 +64,7 @@ namespace xv_11_laser_driver {
 		return checksum;
 	}
 	//update function, takes the angle (an int, from 0 to 359) and the four bytes of data
-	void XV11Laser::update_view(sensor_msgs::LaserScan::Ptr scan,uint16_t angle,uint8_t x,uint8_t x1,uint8_t x2,uint8_t x3){
+	void update_view(sensor_msgs::LaserScan::Ptr scan,uint16_t angle,uint8_t x,uint8_t x1,uint8_t x2,uint8_t x3){
 		uint16_t dist_mm = x | (( x1 & 0x1f) << 8); // data on 13 bits ? 14 bits ?
 		uint16_t quality = x2 | (x3 << 8); // data on 10 bits or more ?
 		scan->ranges[angle] = dist_mm / 1000.0;

@@ -75,7 +75,7 @@ namespace xv_11_laser_driver {
               */
             template<std::size_t SIZE> uint16_t checksum(boost::array<uint8_t, SIZE>& onepackage);
 			/**update function, takes the angle (an int, from 0 to 359) and the four bytes of data*/
-			void XV11Laser::update_view(sensor_msgs::LaserScan::Ptr scan,uint16_t angle,uint8_t x,uint8_t x1,uint8_t x2,uint8_t x3);
+			void update_view(sensor_msgs::LaserScan::Ptr scan,uint16_t angle,uint8_t x,uint8_t x1,uint8_t x2,uint8_t x3);
 			
             std::string port_; ///< @brief The serial port the driver is attached to
             uint32_t baud_rate_; ///< @brief The baud rate for the serial connection
