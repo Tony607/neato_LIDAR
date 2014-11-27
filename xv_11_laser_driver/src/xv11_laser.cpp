@@ -158,14 +158,14 @@ namespace xv_11_laser_driver {
 				// checksum  
 				boost::asio::read(serial_, boost::asio::buffer(raw_bytes,2));
 				int incoming_checksum = (int)(raw_bytes[0]) + ((int)(raw_bytes[1]) << 8);
-				ROS_DEBUG("checksum = %d",incoming_checksum);
 
 				// verify that the received checksum is equal to the one computed from the data
 				if (XV11Laser::checksum(all_data) == incoming_checksum){
-					ROS_DEBUG("checksum success=%d",nb_good);
+					ROS_DEBUG("checksum good=%d",nb_good);
 					nb_good +=1;
 					motor_speed += (float)( b_speed[0] | (b_speed[1] << 8) );
-					rpms=( b_speed[0] | (b_speed[1] << 8) ) / 64;
+					rpms=( b_speed[0] | (b_speed[1] << 8) ) / 64;					
+					ROS_DEBUG("rpms=%d",rpms);
 					update_view(scan, index * 4 + 0, b_data0[0], b_data0[1], b_data0[2], b_data0[3]);
 					update_view(scan, index * 4 + 1, b_data1[0], b_data1[1], b_data1[2], b_data1[3]);
 					update_view(scan, index * 4 + 2, b_data2[0], b_data2[1], b_data2[2], b_data2[3]);
