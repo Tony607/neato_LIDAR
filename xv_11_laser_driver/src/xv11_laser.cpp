@@ -41,7 +41,7 @@ namespace xv_11_laser_driver {
 	}
 	/**checksum of the package*/
 	template<std::size_t SIZE>
-	void XV11Laser::checksum(boost::array<uint8_t, SIZE>& onepackage){
+	uint16_t XV11Laser::checksum(boost::array<uint8_t, SIZE>& onepackage){
 		uint8_t i;
 		uint16_t data[10];
 		uint16_t checksum;
@@ -86,20 +86,21 @@ namespace xv_11_laser_driver {
 		scan->ranges.resize(360);
 		scan->intensities.resize(360);
 		while(true){
-			if (init_level == 0) 
-			// start byte
-			boost::asio::read(serial_, boost::asio::buffer(raw_bytes,1));
-			b = raw_bytes[0];
-			if (b == 0xFA){
-				init_level = 1;
-			}
-			else{
-				init_level = 0;
+			if (init_level == 0) {
+				// start byte
+				boost::asio::read(serial_, boost::asio::buffer(raw_bytes,1));
+				uint8_t b = raw_bytes[0];
+				if (b == 0xFA){
+					init_level = 1;
+				}
+				else{
+					init_level = 0;
+				}
 			}
 			else if (init_level == 1){
 				// position index 
 				boost::asio::read(serial_, boost::asio::buffer(raw_bytes,1));
-				b = raw_bytes[0];
+				uint8_t b = raw_bytes[0];
 				if (b >= 0xA0 and b <= 0xF9){ 
 					index = b - 0xA0;
 					init_level = 2;
@@ -161,7 +162,7 @@ namespace xv_11_laser_driver {
 				if (XV11Laser::checksum(all_data) == incoming_checksum){
 					nb_good +=1;
 					motor_speed += (float)( b_speed[0] | (b_speed[1] << 8) );
-					rpms=float)( b_speed[0] | (b_speed[1] << 8) ) / 64.0;
+					rpms=( b_speed[0] | (b_speed[1] << 8) ) / 64;
 					update_view(scan, index * 4 + 0, b_data0[0], b_data0[1], b_data0[2], b_data0[3]);
 					update_view(scan, index * 4 + 1, b_data1[0], b_data1[1], b_data1[2], b_data1[3]);
 					update_view(scan, index * 4 + 2, b_data2[0], b_data2[1], b_data2[2], b_data2[3]);
@@ -174,10 +175,10 @@ namespace xv_11_laser_driver {
 					nb_errors +=1;
 					
 					// display the samples in an error state
-					update_view(index * 4 + 0, 0, 0x80, 0, 0);
-					update_view(index * 4 + 1, 0, 0x80, 0, 0);
-					update_view(index * 4 + 2, 0, 0x80, 0, 0);
-					update_view(index * 4 + 3, 0, 0x80, 0, 0);
+					update_view(scan, index * 4 + 0, 0, 0x80, 0, 0);
+					update_view(scan, index * 4 + 1, 0, 0x80, 0, 0);
+					update_view(scan, index * 4 + 2, 0, 0x80, 0, 0);
+					update_view(scan, index * 4 + 3, 0, 0x80, 0, 0);
 				}
 				init_level = 0; // reset and wait for the next packet
 			}
