@@ -36,6 +36,7 @@
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include <string>
+#include <cstddef>
 
 namespace xv_11_laser_driver {
     class XV11Laser {
