@@ -65,20 +65,8 @@ namespace xv_11_laser_driver {
 	}
 	//update function, takes the angle (an int, from 0 to 359) and the four bytes of data
 	void XV11Laser::update_view(sensor_msgs::LaserScan::Ptr scan,uint16_t angle,uint8_t x,uint8_t x1,uint8_t x2,uint8_t x3){
-		point.pos[angle] = vector( 0, 0, 0)
-		pointb.pos[angle] = vector( 0, 0, 0)
-		point2.pos[angle] = vector( 0, 0, 0)
-		point2b.pos[angle] = vector( 0, 0, 0)
-		#point3.pos[angle] = vector( 0, 0, 0)
-		#point3b.pos[angle] = vector( 0, 0, 0)
-		
-		angle_rad = angle * pi / 180.0
-		c = cos(angle_rad)
-		s = sin(angle_rad)
-
-		dist_mm = x | (( x1 & 0x1f) << 8) // data on 13 bits ? 14 bits ?
-		quality = x2 | (x3 << 8) // data on 10 bits or more ?
-		
+	dist_mm = x | (( x1 & 0x1f) << 8); // data on 13 bits ? 14 bits ?
+		quality = x2 | (x3 << 8); // data on 10 bits or more ?
 		scan->ranges[angle] = dist_mm / 1000.0;
 		scan->intensities[angle] = quality;
 	}     
