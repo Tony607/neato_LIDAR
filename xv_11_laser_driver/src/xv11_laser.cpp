@@ -35,7 +35,7 @@
 #include <xv_11_laser_driver/xv11_laser.h>
 
 namespace xv_11_laser_driver {
-	XV11Laser::XV11Laser(const boost::string& port, uint32_t baud_rate, uint32_t firmware, boost::asio::io_service& io): port_(port),
+	XV11Laser::XV11Laser(const std::string& port, uint32_t baud_rate, uint32_t firmware, boost::asio::io_service& io): port_(port),
 	baud_rate_(baud_rate), firmware_(firmware), shutting_down_(false), serial_(io, port_) {
 		serial_.set_option(boost::asio::serial_port_base::baud_rate(baud_rate_));
 	}
