@@ -67,7 +67,7 @@ int main(int argc, char **argv)
       sensor_msgs::LaserScan::Ptr scan(new sensor_msgs::LaserScan);
       scan->header.frame_id = frame_id;
       scan->header.stamp = ros::Time::now();
-		ROS_DEBUG("Start polling data");
+	  ROS_DEBUG("Start polling data");
       laser.poll(scan);
       rpms.data=laser.rpms;
       laser_pub.publish(scan);
@@ -77,6 +77,7 @@ int main(int argc, char **argv)
     laser.close();
     return 0;
   } catch (boost::system::system_error ex) {
+	ROS_DEBUG("stopping...");
     ROS_ERROR("Error instantiating laser object. Are you sure you have the correct port and baud rate? Error was %s", ex.what());
     return -1;
   }
