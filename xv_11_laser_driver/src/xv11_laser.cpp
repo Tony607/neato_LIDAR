@@ -68,7 +68,6 @@ namespace xv_11_laser_driver {
 		uint16_t dist_mm = x | (( x1 & 0x1f) << 8); // data on 13 bits ? 14 bits ?
 		uint16_t quality = x2 | (x3 << 8); // data on 10 bits or more ?
 							
-		ROS_DEBUG("angle=%d, dist=%d, quality=%d",angle, dist_mm / 1000.0, quality);
 		scan->ranges[angle] = dist_mm / 1000.0;
 		scan->intensities[angle] = quality;
 	}     
@@ -164,11 +163,9 @@ namespace xv_11_laser_driver {
 
 				// verify that the received checksum is equal to the one computed from the data
 				if (XV11Laser::checksum(all_data) == incoming_checksum){
-					ROS_DEBUG("checksum good=%d",nb_good);
 					nb_good +=1;
 					motor_speed += (float)( b_speed[0] | (b_speed[1] << 8) );
-					rpms=( b_speed[0] | (b_speed[1] << 8) ) / 64;					
-					ROS_DEBUG("rpms=%d",rpms);
+					rpms=( b_speed[0] | (b_speed[1] << 8) ) / 64;
 					update_view(scan, index * 4 + 0, b_data0[0], b_data0[1], b_data0[2], b_data0[3]);
 					update_view(scan, index * 4 + 1, b_data1[0], b_data1[1], b_data1[2], b_data1[3]);
 					update_view(scan, index * 4 + 2, b_data2[0], b_data2[1], b_data2[2], b_data2[3]);
@@ -181,7 +178,6 @@ namespace xv_11_laser_driver {
 				else{
 					// the checksum does not match, something went wrong...
 					nb_errors +=1;
-					ROS_DEBUG("checksum error=%d",nb_errors);
 					
 					// display the samples in an error state
 					update_view(scan, index * 4 + 0, 0, 0x80, 0, 0);
