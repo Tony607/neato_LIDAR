@@ -68,7 +68,7 @@ namespace xv_11_laser_driver {
 		uint16_t dist_mm = x | (( x1 & 0x1f) << 8); // data on 13 bits ? 14 bits ?
 		uint16_t quality = x2 | (x3 << 8); // data on 10 bits or more ?
 							
-		ROS_DEBUG("angle=%d, dist=%d, quality=%d",angle, dist_mm, quality);
+		ROS_DEBUG("angle=%d, dist=%d, quality=%d",angle, dist_mm / 1000.0, quality);
 		scan->ranges[angle] = dist_mm / 1000.0;
 		scan->intensities[angle] = quality;
 	}     
@@ -78,6 +78,7 @@ namespace xv_11_laser_driver {
 		uint16_t nb_errors = 0;
 		boost::array<uint8_t, 4> raw_bytes;
 		uint32_t motor_speed = 0;
+		bool got_scan = false;
 		rpms=0;
 		
 		scan->angle_min = 0.0;
@@ -88,7 +89,7 @@ namespace xv_11_laser_driver {
 		scan->ranges.resize(360);
 		scan->intensities.resize(360);
 		ROS_DEBUG("Hello %s", "LIDAR");
-		while(true){
+		while(!shutting_down_ && !got_scan){
 			if (init_level == 0) {
 				// start byte
 				boost::asio::read(serial_, boost::asio::buffer(raw_bytes,1));
@@ -172,7 +173,9 @@ namespace xv_11_laser_driver {
 					update_view(scan, index * 4 + 1, b_data1[0], b_data1[1], b_data1[2], b_data1[3]);
 					update_view(scan, index * 4 + 2, b_data2[0], b_data2[1], b_data2[2], b_data2[3]);
 					update_view(scan, index * 4 + 3, b_data3[0], b_data3[1], b_data3[2], b_data3[3]);
-					
+					if(index * 4 + 3>=359){
+						got_scan = true;
+					}
 					scan->time_increment = motor_speed/nb_good/1e8;
 				}
 				else{
@@ -185,6 +188,9 @@ namespace xv_11_laser_driver {
 					update_view(scan, index * 4 + 1, 0, 0x80, 0, 0);
 					update_view(scan, index * 4 + 2, 0, 0x80, 0, 0);
 					update_view(scan, index * 4 + 3, 0, 0x80, 0, 0);
+					if(index * 4 + 3>=359){
+						got_scan = true;
+					}
 				}
 				init_level = 0; // reset and wait for the next packet
 			}
