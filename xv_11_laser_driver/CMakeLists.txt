@@ -1,3 +1,4 @@
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 cmake_minimum_required(VERSION 2.8.3)
 project(xv_11_laser_driver)
 
