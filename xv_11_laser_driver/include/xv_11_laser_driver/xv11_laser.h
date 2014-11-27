@@ -38,6 +38,7 @@
 #include <string>
 #include <cstddef>
 #include <cstdint>
+#include <ros/console.h>
 
 namespace xv_11_laser_driver {
 	class XV11Laser {
