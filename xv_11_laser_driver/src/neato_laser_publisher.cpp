@@ -66,11 +66,11 @@ int main(int argc, char **argv)
 		ros::Publisher laser_pub = n.advertise<sensor_msgs::LaserScan>("scan", 1000);
 		ros::Publisher motor_pub = n.advertise<std_msgs::UInt16>("rpms",1000);
 
+		ROS_DEBUG("Running XV-11 lidar publisher");
 		while (ros::ok()) {
 			sensor_msgs::LaserScan::Ptr scan(new sensor_msgs::LaserScan);
 			scan->header.frame_id = frame_id;
 			scan->header.stamp = ros::Time::now();
-			ROS_DEBUG("Start polling data");
 			laser.poll(scan);
 			rpms.data=laser.rpms;
 			laser_pub.publish(scan);

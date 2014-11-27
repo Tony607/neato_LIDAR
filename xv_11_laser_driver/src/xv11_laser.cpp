@@ -87,7 +87,6 @@ namespace xv_11_laser_driver {
 		scan->range_max = 5.0;
 		scan->ranges.resize(360);
 		scan->intensities.resize(360);
-		ROS_DEBUG("Hello %s", "LIDAR");
 		while(!shutting_down_ && !got_scan){
 			if (init_level == 0) {
 				// start byte
