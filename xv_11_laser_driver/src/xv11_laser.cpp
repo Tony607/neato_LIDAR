@@ -91,10 +91,8 @@ namespace xv_11_laser_driver {
 				// start byte
 				boost::asio::read(serial_, boost::asio::buffer(raw_bytes,1));
 				uint8_t b = raw_bytes[0];
-				ROS_DEBUG("L0 got new byte = %d",b);
 				if (b == 0xFA){
 					init_level = 1;
-					ROS_DEBUG("got start byte");
 				}
 				else{
 					init_level = 0;
@@ -104,7 +102,6 @@ namespace xv_11_laser_driver {
 				// position index 
 				boost::asio::read(serial_, boost::asio::buffer(raw_bytes,1));
 				uint8_t b = raw_bytes[0];
-				ROS_DEBUG("L1 got new byte = %d",b);
 				if (b >= 0xA0 and b <= 0xF9){ 
 					index = b - 0xA0;
 					init_level = 2;
@@ -161,9 +158,11 @@ namespace xv_11_laser_driver {
 				// checksum  
 				boost::asio::read(serial_, boost::asio::buffer(raw_bytes,2));
 				int incoming_checksum = (int)(raw_bytes[0]) + ((int)(raw_bytes[1]) << 8);
+				ROS_DEBUG("checksum = %d",incoming_checksum);
 
 				// verify that the received checksum is equal to the one computed from the data
 				if (XV11Laser::checksum(all_data) == incoming_checksum){
+					ROS_DEBUG("checksum success=%d",nb_good);
 					nb_good +=1;
 					motor_speed += (float)( b_speed[0] | (b_speed[1] << 8) );
 					rpms=( b_speed[0] | (b_speed[1] << 8) ) / 64;
@@ -177,6 +176,7 @@ namespace xv_11_laser_driver {
 				else{
 					// the checksum does not match, something went wrong...
 					nb_errors +=1;
+					ROS_DEBUG("checksum error=%d",nb_errors);
 					
 					// display the samples in an error state
 					update_view(scan, index * 4 + 0, 0, 0x80, 0, 0);
